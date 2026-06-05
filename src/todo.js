@@ -1,3 +1,5 @@
+import { saveToStorage } from "./storage";
+
 export default class Todo {
 
     constructor(title, description, dueDate, priority, notes, checklist){
@@ -12,10 +14,12 @@ export default class Todo {
     }
 
     changeCompletionStatus(){
-        this.isComplete = !this.isComplete;
+        this.isComplete = !this.isComplete,
+        saveToStorage()
     }
 
     editTodo(newDataObj){
-        return Object.assign(this, newDataObj);
+        return Object.assign(this, newDataObj),
+        saveToStorage()
     }
 }
