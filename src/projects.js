@@ -1,5 +1,3 @@
-import { saveToStorage } from "./storage";
-
 export class Project {
 
     constructor(name){
@@ -10,13 +8,11 @@ export class Project {
 
     addTodoToProject(todo){
         this.todosList.push(todo);
-        saveToStorage()
     }
 
     removeTodoFromProject(todo){
         const toDoToRemove = this.todosList.findIndex((myTodos) => todo.ID === myTodos.ID )
         this.todosList.splice(toDoToRemove, 1)
-        saveToStorage()
     }
 
     getTodos(){
@@ -33,7 +29,6 @@ export class ProjectManager {
 
     createProject(project){
         this.projectList.push(project)
-        saveToStorage()
     }
 
     removeProject(project){
@@ -43,8 +38,6 @@ export class ProjectManager {
             const projectToRemove = this.projectList.findIndex((myProjects) => project.ID === myProjects.ID )
             this.projectList.splice(projectToRemove, 1)
         }
-
-        saveToStorage()
     }
 
     getProjects(){

@@ -1,23 +1,28 @@
 import Todo from './todo.js'
 import { Project, ProjectManager } from './projects.js'
+import { loadFromStorage, saveToStorage } from './storage.js'
 
-
-
-
-
-
-
-
-
-
-
-
-
+let manager
+if(localStorage.getItem("ProjectManagerState")){
+    manager = loadFromStorage();
+} else {
+    manager = new ProjectManager()
+}
 
 // TESTS
 console.log("TESTS BELOW:")
 
-const manager = new ProjectManager()
+// create some data
+const project1 = new Project('Work')
+manager.createProject(project1)
+
+// save manually
+saveToStorage(manager)
+
+// check localStorage in DevTools Application tab
+console.log('Saved to localStorage:', localStorage.getItem('ProjectManagerState'))
+
+/* // const manager = new ProjectManager()
 console.log('Initial state:', manager.getProjects())
 
 // Test adding a project
@@ -54,3 +59,4 @@ console.log('After removing project:', manager.getProjects())
 // Test removing default project - you write this part
 manager.removeProject(manager.defaultProject)
 console.log('After removing default project:', manager.getProjects())
+*/
