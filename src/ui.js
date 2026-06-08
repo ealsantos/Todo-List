@@ -52,6 +52,10 @@ export function renderMainPanel(project){
         dltBtn.textContent = "Delete Todo"
         dltBtn.classList.add('dltBtn')
         newTodoItem.appendChild(dltBtn)
+        const completeBtn = document.createElement('button')
+        completeBtn.textContent = "Complete Todo"
+        completeBtn.classList.add('completeBtn')
+        newTodoItem.appendChild(completeBtn)
     }
 
     const addBtn = document.createElement('button')
@@ -63,6 +67,15 @@ export function renderMainPanel(project){
 // Listeners
 
 export function setupEventListeners(manager){
+
+    let title = document.querySelector('input[name="title"]')
+    let description = document.querySelector('input[name="description"]')
+    let dueDate = document.querySelector('input[name="dueDate"]')
+    let priority = document.querySelector('input[name="priority"]')
+    let notes = document.querySelector('input[name="notes"]')
+    let checklist = document.querySelector('input[name="checklist"]')
+
+    let todoToEdit
     
     sidebarList.addEventListener("click", (event) => {
         
@@ -92,7 +105,9 @@ export function setupEventListeners(manager){
 
     })
 
-        mainPanelList.addEventListener("click", (event) => {
+    let dialog = document.getElementById('editDialog')
+
+    mainPanelList.addEventListener("click", (event) => {
         
         if(event.target.classList.contains('addTodoBtn')){
             const getTodoTitle = prompt("What is your next task?")
@@ -108,16 +123,43 @@ export function setupEventListeners(manager){
             currentProject.removeTodoFromProject(todoToDelete)
             saveToStorage(manager)
             renderMainPanel(currentProject)
-        }
 
-        /* else if(event.target.closest('li')){
+        } else if (event.target.classList.contains('completeBtn')) {
             const getElementList = event.target.closest('li')
-            const getProjectID = getElementList.getAttribute("data-id")
-            const getAllProjects = manager.getProjects()
-            const projectToDisplay = getAllProjects.find((proj) => proj.ID === getProjectID)
-            renderMainPanel(projectToDisplay)
-        }*/
+            const getTodoID = getElementList.getAttribute("data-id")
+            const todoToComplete = currentProject.todosList.find((todo) => todo.ID === getTodoID)
+            todoToComplete.changeCompletionStatus()
+            currentProject.removeTodoFromProject(todoToComplete)
+            saveToStorage(manager)
+            renderMainPanel(currentProject)
+
+        } else if(event.target.closest('li')){
+            const getElementList = event.target.closest('li')
+            const getTodoID = getElementList.getAttribute("data-id")
+            todoToEdit = currentProject.todosList.find((todo) => todo.ID === getTodoID)
+            title.value = todoToEdit.title
+            description.value = todoToEdit.description
+            dueDate.value = todoToEdit.dueDate
+            priority.value = todoToEdit.priority
+            notes.value = todoToEdit.notes
+            checklist.value = todoToEdit.checklist
+            dialog.showModal()
+            // renderMainPanel(projectToDisplay)
+        }
     })
 
+    dialog.addEventListener("click", (event) => {
+        
+        if(event.target.classList.contains('saveBtn')){
+            const updatedData = {"title": title.value, "description": description.value, "dueDate": dueDate.value, "priority": priority.value, "notes": notes.value, "checklist": checklist.value}
+            todoToEdit.editTodo(updatedData)
+            saveToStorage(manager)
+            dialog.close()
+            renderMainPanel(currentProject)
 
+        } else if (event.target.classList.contains('closeBtn')){
+            dialog.close()
+        } 
+
+    })
 }
