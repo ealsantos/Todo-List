@@ -16,7 +16,7 @@ export function loadFromStorage(){
         newProject.ID = projects.ID
 
         const newTodos = projects.todosList.map((todo) => {
-            const newTodo = new Todo(todo.title, todo.description, todo.dueDate, todo.priority, todo.notes, todo.checklist)
+            const newTodo = new Todo(todo.title, todo.description, todo.dueDate, todo.priority, todo.notes)
             newTodo.ID = todo.ID
             newTodo.isComplete = todo.isComplete
             return newTodo

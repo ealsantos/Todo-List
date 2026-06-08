@@ -73,7 +73,6 @@ export function setupEventListeners(manager){
     let dueDate = document.querySelector('input[name="dueDate"]')
     let priority = document.querySelector('input[name="priority"]')
     let notes = document.querySelector('input[name="notes"]')
-    let checklist = document.querySelector('input[name="checklist"]')
 
     let todoToEdit
     
@@ -81,6 +80,8 @@ export function setupEventListeners(manager){
         
         if(event.target.classList.contains('addProjBtn')){
             const getProjectName = prompt("What is the name of your project?", "New Project")
+            console.log('project name:', getProjectName)
+            console.log('type:', typeof getProjectName)
             const newProject = new Project(getProjectName)
             manager.createProject(newProject)
             saveToStorage(manager)
@@ -142,7 +143,6 @@ export function setupEventListeners(manager){
             dueDate.value = todoToEdit.dueDate
             priority.value = todoToEdit.priority
             notes.value = todoToEdit.notes
-            checklist.value = todoToEdit.checklist
             dialog.showModal()
             // renderMainPanel(projectToDisplay)
         }
@@ -151,7 +151,7 @@ export function setupEventListeners(manager){
     dialog.addEventListener("click", (event) => {
         
         if(event.target.classList.contains('saveBtn')){
-            const updatedData = {"title": title.value, "description": description.value, "dueDate": dueDate.value, "priority": priority.value, "notes": notes.value, "checklist": checklist.value}
+            const updatedData = {"title": title.value, "description": description.value, "dueDate": dueDate.value, "priority": priority.value, "notes": notes.value}
             todoToEdit.editTodo(updatedData)
             saveToStorage(manager)
             dialog.close()
