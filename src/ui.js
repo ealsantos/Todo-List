@@ -1,8 +1,10 @@
-
-
+import { Project } from "./projects"
+import { saveToStorage } from "./storage"
+import Todo from "./todo"
 
 const sidebarList = document.getElementById('sidebar')
 const mainPanelList = document.getElementById('mainPanel')
+let currentProject = null
 
 // Renderization
 
@@ -18,6 +20,10 @@ export function renderSidebar(myProjects){
         projectName.textContent = projects.name
         newUL.appendChild(newProject)
         newProject.appendChild(projectName)
+        const dltBtn = document.createElement('button')
+        dltBtn.textContent = "Delete Project"
+        dltBtn.classList.add('dltBtn')
+        newProject.appendChild(dltBtn)
     }
 
     const addBtn = document.createElement('button')
@@ -28,6 +34,7 @@ export function renderSidebar(myProjects){
 
 export function renderMainPanel(project){
     mainPanelList.innerHTML = ""
+    currentProject = project
     const projectTitle = document.createElement('h1')
     projectTitle.textContent = project.name
     mainPanelList.appendChild(projectTitle)
@@ -39,8 +46,12 @@ export function renderMainPanel(project){
         const todoName = document.createElement ('p')
         newTodoItem.setAttribute("data-id", todo.ID)
         todoName.textContent = todo.title
-        newUL.appendChild(newTodoList)
-        newTodoList.appendChild(todoName)
+        newUL.appendChild(newTodoItem)
+        newTodoItem.appendChild(todoName)
+        const dltBtn = document.createElement('button')
+        dltBtn.textContent = "Delete Todo"
+        dltBtn.classList.add('dltBtn')
+        newTodoItem.appendChild(dltBtn)
     }
 
     const addBtn = document.createElement('button')
@@ -54,10 +65,59 @@ export function renderMainPanel(project){
 export function setupEventListeners(manager){
     
     sidebarList.addEventListener("click", (event) => {
-        const getElementList = event.target.closest('li')
-        const getProjectID = getElementList.getAttribute("data-id")
-        const getAllProjects = manager.getProjects()
-        const projectToDisplay = getAllProjects.find((proj) => proj.ID === getProjectID)
-        renderMainPanel(projectToDisplay)
+        
+        if(event.target.classList.contains('addProjBtn')){
+            const getProjectName = prompt("What is the name of your project?", "New Project")
+            const newProject = new Project(getProjectName)
+            manager.createProject(newProject)
+            saveToStorage(manager)
+            renderSidebar(manager.getProjects())
+
+        } else if (event.target.classList.contains('dltBtn')){
+            const getElementList = event.target.closest('li')
+            const getProjectID = getElementList.getAttribute("data-id")
+            const getAllProjects = manager.getProjects()
+            const projectToDelete = getAllProjects.find((proj) => proj.ID === getProjectID)
+            manager.removeProject(projectToDelete)
+            saveToStorage(manager)
+            renderSidebar(manager.getProjects())
+
+        } else if(event.target.closest('li')){
+            const getElementList = event.target.closest('li')
+            const getProjectID = getElementList.getAttribute("data-id")
+            const getAllProjects = manager.getProjects()
+            const projectToDisplay = getAllProjects.find((proj) => proj.ID === getProjectID)
+            renderMainPanel(projectToDisplay)
+        } 
+
     })
+
+        mainPanelList.addEventListener("click", (event) => {
+        
+        if(event.target.classList.contains('addTodoBtn')){
+            const getTodoTitle = prompt("What is your next task?")
+            const newTodo = new Todo(getTodoTitle)
+            currentProject.addTodoToProject(newTodo)
+            saveToStorage(manager)
+            renderMainPanel(currentProject)
+
+        } else if (event.target.classList.contains('dltBtn')){
+            const getElementList = event.target.closest('li')
+            const getTodoID = getElementList.getAttribute("data-id")
+            const todoToDelete = currentProject.todosList.find((todo) => todo.ID === getTodoID)
+            currentProject.removeTodoFromProject(todoToDelete)
+            saveToStorage(manager)
+            renderMainPanel(currentProject)
+        }
+
+        /* else if(event.target.closest('li')){
+            const getElementList = event.target.closest('li')
+            const getProjectID = getElementList.getAttribute("data-id")
+            const getAllProjects = manager.getProjects()
+            const projectToDisplay = getAllProjects.find((proj) => proj.ID === getProjectID)
+            renderMainPanel(projectToDisplay)
+        }*/
+    })
+
+
 }
