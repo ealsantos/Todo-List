@@ -1,6 +1,7 @@
 import Todo from './todo.js'
 import { Project, ProjectManager } from './projects.js'
 import { loadFromStorage, saveToStorage } from './storage.js'
+import { renderMainPanel, renderSidebar, setupEventListeners } from './ui.js';
 
 let manager
 if(localStorage.getItem("ProjectManagerState")){
@@ -8,6 +9,10 @@ if(localStorage.getItem("ProjectManagerState")){
 } else {
     manager = new ProjectManager()
 }
+
+renderSidebar(manager.getProjects())
+renderMainPanel(manager.defaultProject)
+setupEventListeners(manager)
 
 // TESTS
 console.log("TESTS BELOW:")

@@ -27,5 +27,6 @@ export function loadFromStorage(){
 
     const restoredManager = new ProjectManager()
     restoredManager.projectList = parseProjects
+    restoredManager.defaultProject = parseProjects[0]
     return restoredManager
 }

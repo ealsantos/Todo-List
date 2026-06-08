@@ -23,7 +23,7 @@ export class Project {
 export class ProjectManager {
     constructor(){
         this.projectList = []
-        this.defaultProject = new Project('Default')
+        this.defaultProject = new Project('Default Project')
         this.projectList.push(this.defaultProject)
     }
 
