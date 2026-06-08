@@ -79,9 +79,17 @@ export function setupEventListeners(manager){
     sidebarList.addEventListener("click", (event) => {
         
         if(event.target.classList.contains('addProjBtn')){
-            const getProjectName = prompt("What is the name of your project?", "New Project")
-            console.log('project name:', getProjectName)
-            console.log('type:', typeof getProjectName)
+            let getProjectName = prompt("What is the name of your project?", "New Project");
+            if (getProjectName === null){
+                return
+            } 
+
+            while (getProjectName === "") {
+                alert("Project needs a valid name!")
+                getProjectName = prompt("What is the name of your project?", "New Project");
+                if(getProjectName === null) return
+            }
+
             const newProject = new Project(getProjectName)
             manager.createProject(newProject)
             saveToStorage(manager)
@@ -107,11 +115,23 @@ export function setupEventListeners(manager){
     })
 
     let dialog = document.getElementById('editDialog')
+    const saveBtn = document.querySelector('.saveBtn')
 
     mainPanelList.addEventListener("click", (event) => {
         
         if(event.target.classList.contains('addTodoBtn')){
-            const getTodoTitle = prompt("What is your next task?")
+            let getTodoTitle = prompt("What is your next task?")
+            if (getTodoTitle === null){
+                return
+            } 
+
+            while (getTodoTitle === "") {
+                alert("The task needs a valid title!")
+                getTodoTitle = prompt("What is your next task?");
+                if(getTodoTitle === null) return
+            }
+
+
             const newTodo = new Todo(getTodoTitle)
             currentProject.addTodoToProject(newTodo)
             saveToStorage(manager)
@@ -162,4 +182,12 @@ export function setupEventListeners(manager){
         } 
 
     })
+
+        title.addEventListener("input", (event) => {
+            if(title.value === ''){
+            saveBtn.disabled = true
+        } else {
+            saveBtn.disabled = false
+        }
+        })
 }
