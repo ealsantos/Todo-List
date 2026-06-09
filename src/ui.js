@@ -40,13 +40,30 @@ export function renderMainPanel(project){
     mainPanelList.appendChild(projectTitle)
     const newUL = document.createElement('ul')
     mainPanelList.appendChild(newUL)
+    const activeTodosList = document.createElement('ul')
+    const completedTodosList = document.createElement ('ul')
+    
+    // APPEND H2 ou H3
+    const activeTodosListTitle = document.createElement('h2')
+    const completedTodosListTitle = document.createElement('h2')
 
-    for (const todo of project.todosList){
+    activeTodosListTitle.textContent = "Active Todos"
+    completedTodosListTitle.textContent = "Completed Todos"
+
+    
+    // CONTINUAR DAQUI - Adicionar loop de completados dentro do IF. Adicionar loop de incompletos, fora
+
+    const activeTodos = project.todosList.filter((todo) => !todo.isComplete)
+    if (activeTodos.length >= 1){
+        newUL.appendChild(activeTodosListTitle)
+        newUL.appendChild(activeTodosList)
+
+    for (const todo of activeTodos){
         const newTodoItem = document.createElement('li')
         const todoName = document.createElement ('p')
         newTodoItem.setAttribute("data-id", todo.ID)
         todoName.textContent = todo.title
-        newUL.appendChild(newTodoItem)
+        activeTodosList.appendChild(newTodoItem)
         newTodoItem.appendChild(todoName)
         const dltBtn = document.createElement('button')
         dltBtn.textContent = "Delete Todo"
@@ -56,6 +73,26 @@ export function renderMainPanel(project){
         completeBtn.textContent = "Complete Todo"
         completeBtn.classList.add('completeBtn')
         newTodoItem.appendChild(completeBtn)
+        }
+    }
+
+    const completedTodos = project.todosList.filter((todo) => todo.isComplete)
+    if (completedTodos.length >= 1){
+        newUL.appendChild(completedTodosListTitle)
+        newUL.appendChild(completedTodosList)
+
+        for (const todo of completedTodos){
+        const newTodoItem = document.createElement('li')
+        const todoName = document.createElement ('p')
+        newTodoItem.setAttribute("data-id", todo.ID)
+        todoName.textContent = todo.title
+        completedTodosList.appendChild(newTodoItem)
+        newTodoItem.appendChild(todoName)
+        const reOpenBtn = document.createElement('button')
+        reOpenBtn.textContent = "Reopen Todo"
+        reOpenBtn.classList.add('reOpenBtn')
+        newTodoItem.appendChild(reOpenBtn)
+        }
     }
 
     const addBtn = document.createElement('button')
@@ -118,7 +155,6 @@ export function setupEventListeners(manager){
     const saveBtn = document.querySelector('.saveBtn')
 
     mainPanelList.addEventListener("click", (event) => {
-        
         if(event.target.classList.contains('addTodoBtn')){
             let getTodoTitle = prompt("What is your next task?")
             if (getTodoTitle === null){
@@ -150,11 +186,19 @@ export function setupEventListeners(manager){
             const getTodoID = getElementList.getAttribute("data-id")
             const todoToComplete = currentProject.todosList.find((todo) => todo.ID === getTodoID)
             todoToComplete.changeCompletionStatus()
-            currentProject.removeTodoFromProject(todoToComplete)
             saveToStorage(manager)
             renderMainPanel(currentProject)
 
-        } else if(event.target.closest('li')){
+        } else if (event.target.classList.contains('reOpenBtn')) {
+            const getElementList = event.target.closest('li')
+            const getTodoID = getElementList.getAttribute("data-id")
+            const todoToReopen = currentProject.todosList.find((todo) => todo.ID === getTodoID)
+            todoToReopen.changeCompletionStatus()
+            saveToStorage(manager)
+            renderMainPanel(currentProject)
+        } 
+        
+            else if(event.target.closest('li')){
             const getElementList = event.target.closest('li')
             const getTodoID = getElementList.getAttribute("data-id")
             todoToEdit = currentProject.todosList.find((todo) => todo.ID === getTodoID)
@@ -191,3 +235,5 @@ export function setupEventListeners(manager){
         }
         })
 }
+
+

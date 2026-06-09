@@ -23,7 +23,7 @@ export class Project {
 export class ProjectManager {
     constructor(){
         this.projectList = []
-        this.defaultProject = new Project('Default Project')
+        this.defaultProject = new Project('My default project')
         this.projectList.push(this.defaultProject)
     }
 
@@ -33,7 +33,7 @@ export class ProjectManager {
 
     removeProject(project){
         if (project.ID === this.defaultProject.ID){
-            console.log ("You need at least one project")
+            alert("You can't delete the default project")
         } else {
             const projectToRemove = this.projectList.findIndex((myProjects) => project.ID === myProjects.ID )
             this.projectList.splice(projectToRemove, 1)

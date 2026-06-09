@@ -3,7 +3,6 @@ import Todo from "./todo";
 
 export function saveToStorage(object){
     const textJSON = JSON.stringify(object)
-    console.log('Saving to storage:', textJSON)
     localStorage.setItem("ProjectManagerState", textJSON)
 }
 
