@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+<script defer src="main.js"></script></head>
+<body>
+    <div class="container">
+        <div id="sidebar">
+        </div>
+        <div id="mainPanel">
+        </div>
+    </div>
+    <dialog id="editDialog"> 
+        <h2>Edit your Todo informations</h2>
+        <form>
+            <label>
+                Title: <input type="text" name="title">
+            </label>
+            <label>
+                Description: <input type="text" name="description">
+            </label>
+            <label>
+                Due date <input type="date" name="dueDate">
+            </label>
+            <label>
+                Priority <input type="number" min="1" max="5" name="priority">
+            </label>
+            <label>
+                Notes <input type="text" name="notes">
+            </label>
+        </form>
+        <button class="saveBtn">Save Changes</button>
+        <button class="closeBtn">Close without saving</button>
+    </dialog>
+</body>
+</html>
